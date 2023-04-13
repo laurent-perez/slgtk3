@@ -1,0 +1,35 @@
+pango-types.h
+pango-font.h
+pango-attributes.h
+pango-bidi-type.h
+# pango-break.h
+pangocairo.h
+pango-context.h
+pango-coverage.h
+# pango-engine.h
+# pango-enum-types.h
+# pangofc-decoder.h
+# pangofc-font.h
+# pangofc-fontmap.h
+# pango-features.h
+pango-fontmap.h
+# pango-fontset.h
+pangoft2.h
+# pango-glyph.h
+# pango-glyph-item.h
+pango-gravity.h
+# pango.h
+# pango-item.h
+pango-language.h
+pango-layout.h
+# pango-matrix.h
+# pango-modules.h
+# pango-ot.h
+pango-renderer.h
+pango-script.h
+pango-tabs.h
+pango-utils.h
+# pango-version-macros.h
+# pangoxft.h
+# pangoxft-render.h
+# pangox.h

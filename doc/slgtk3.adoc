@@ -1,0 +1,265 @@
+= Reference manual for SLgtk3
+Laurent Perez <laurent.perez@unicaen.fr>
+Version 0.1
+:toc:
+:numbered:
+
+
+== Introduction
+
+SLgtk3 module provide bindings for the https://gtk.org[GTK3]
+library (and companion libraries Glib, Pango, Gdk-Pixbuf) to the
+https://www.jedsoft.org/slang[S-Lang] language.
+
+=== Code generation
+
+Most of the 6000 functions present in the SLgtk3 module are created
+automatically using the https://www.jedsoft.org/snapshots[Slirp]
+code generator.
+
+Many bindings for high level languages are provided via GObject
+Introspection layer. This is not the case here, but introspection
+metadata may be used in the futur, at least to instruct Slirp
+correctly without having to dig into code or documentation.
+
+GTK 3.24 is the final stable release of GTK3 branch.
+Over the years, many GTK3, Glib... functions have been deprecated.
+This first SLgtk3 release is as close as possible to those recommandations.
+However, it still possible to ask Slirp to generate deprecated functions anyway
+by commenting them out in slirprc-gtk3.sl file.
+
+=== Difference with SLgtk
+
+While the https://www.cairographics.org[Cairo] graphics library is
+used internally to render GTK3 widgets, SLgtk3 module don't wrap Cairo
+functions.
+However, Cairo can be mixed with GTK code, as shown in some examples,
+but Cairo bindings are distributed as a separate module, as Cairo can
+be used in applications that don't rely on GTK3.
+
+https://gtkextra.sourceforge.net[GtkExtra] is now unmaintened and has
+not been ported to GTK3. However, bindings for Fredy Paquet's
+https://fpaquet.github.io/gtksheet[GtkSheet] will be available
+separatly. https://sourceforge.net/projects/gtkdatabox[GtkDatabox]
+has been ported to GTK3 and a S-Lang module will be available soon.
+Thus, it will be possible to write GUI that are more scientific oriented.
+
+Years ago, it may be cumbersome to build GTK from sources and Mike
+Noble added a S-Lang module with statically linked libraries to the
+SLgtk package. Now that GTK3 is well established and available in
+every distribution, there is no real need for such a module.
+
+== Example code
+
+[source,slang]
+----
+include::builder.sl[]
+----
+
+== Programming interface
+
+As S-Lang language is syntactically very close to C language,
+documenting every C function wrapped doesn't worth the effort. So,
+please, refer to GTK3 and friends documentation. Example code provided
+in this package, that mimic C _gtk3-demo_ code, should also be helpfull.
+Basically, SLgtk3 functions behave the way you would expect.
+
+Accessors functions that take one or more pointers in C return one or
+more values in S-Lang.
+
+[source,slang]
+----
+(x, y) = gdk_event_get_coords (event);
+----
+
+C functions returning a null terminated array of strings (char* or
+gchar*) return an Array_Type of strings.
+
+[source,slang]
+----
+String_Type [] = g_get_system_config_dirs ();
+----
+
+C functions returning GList or GSList of strings return a S-Lang
+List_Type of strings.
+
+[source,slang]
+----
+List_Type = gtk_file_chooser_get_filenames (chooser);
+----
+
+Some GTK3 C functions can be passed NULL pointers (and still doing
+something usefull). Respective arguments can be omitted in S-Lang.
+
+[source,slang]
+----
+sw = gtk_scrolled_window_new (,);
+----
+
+=== Memory management
+
+GObject instantiated in S-Lang scope will be automatically deleted
+when the S-Lang variable goes out of scope. There is no need therefor
+to call : `g_object_unref ()`, `gtk_text_iter_free ()`...
+
+=== Variable length argument lists
+
+SLgtk3 functions which wrap C functions that receive a variable number
+of arguments do not require any special termination parameter. For
+example, it is not necessary to: 
+
+* terminate calls to `gtk_list_store_set` with -1
+* terminate calls to `gtk_tree_view_column_new_with_attributes` with
+NULL
+
+The same goal is sometime achieved by passing arguments as an array
+(`gtk_list_store_new`, `gtk_dialog_new_with_buttons`...)
+	    
+=== Signal handlers and callbacks
+
+Some GTK3 C functions can register callback (_g_signal_connect_,
+_g_timeout_add_ ...). Data to this handler are then passed as a pointer.
+
+In S-Lang calls to corresponding functions, any number of value of any
+declared type may be added as parameters to the callback.
+
+[source,slang]
+----
+() = g_signal_connect (button, "clicked", &my_callback, param_1, "param_2", {my, "list"});
+----
+
+=== GtkBuilder
+
+The SLgtk3 function `gtk_builder_get_objects` doesn't behave the same
+as its C counterpart. Instead of returning a list of widget instances,
+a call to this function return a S-Lang dictionary, where keys are
+names given to widgets in the https://glade.gnome.org[Glade] user
+interface designer, and values are widget instances.
+
+Thus, one can write :
+
+[source,slang]
+----
+[...]
+ui = gtk_builder_new_from_file ("demo.ui");
+widgets = gtk_builder_get_objects (ui);
+gtk_widget_show_all (widgets ["window"]);
+[...]
+----
+
+=== Mapped C Structures
+
+While most GDK3 / Glib / GTK3 structures map to opaque S-Lang types,
+some of them map to so called
+http://www.jedsoft.org/slang/doc/html/cslang-5.html#ss5.5[interpreter
+structures].
+
+This is the case for GdkColor (deprecated), GdkPoint, GdkRectangle,
+GdkRGBA, GtkPageRange, GdkKeymapKey, GdkGeometry, GParamSpec,
+GTimeVal, GActionEntry, GtkBorder, GtkRequisition, PangoColor,
+PangoRectangle, PangoMatrix.
+
+Those structures may be instantiated in S-Lang scope using the
+dereference operator :
+
+[source,slang]
+----
+variable my_color = @GdkRGBA;
+
+my_color.red = .2;
+my_color.green = .4;
+my_color.blue = .6;
+my_color.alpha = .8;
+----
+
+Convenience functions have been added for the most used ones
+(GdkPoint, GdkRectangle, GdkRGBA).
+
+[source,slang]
+----
+variable my_color = gdk_rgba_new (.2, .4, .6, .8);
+----
+
+=== GError
+
+In Glib, recoverable runtime errors are reported via the GError
+method. Corresponding functions make use of S-Lang's exception model.
+
+[source,slang]
+----
+ui = gtk_builder_new ();
+try (err)
+  () = gtk_builder_add_from_file (ui, "demo.ui");
+catch ApplicationError:
+  message (err.object.message);
+----
+
+=== GdkEvent
+
+Unlike in SLgtk, events are not pushed as a S-Lang structure any more.
+GdkEvent is an opaque structure and events are handled via GDK3 accessor functions. 
+
+=== Gobject types
+
+Gobject model makes heavy use of type query and conversion macros.
+There is obviously no need for converting types but you may sometimes want to know
+about the underlying Gobject type. A few functions have been added that behave the
+same as their C macros counterpart. Thus, the `gtk_is (widget, type)` function
+emulate GTK_IS_XXX macros. The `gtk_is_container (widget)` function has been
+written given its usefulness, and more specific ones could be added if needed.
+Similarly, the `g_object_type_name ()` function replace the equivalent
+G_OBJECT_TYPE_NAME () macro.
+Variables such as GDK_TYPE_PIXBUF and GTK_TYPE_WIDGET also exist when you need to
+explicitly set a type.
+
+[source,slang]
+----
+[...]
+store = gtk_list_store_new ([G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_BOOLEAN]);
+[...]
+----
+
+== Utilities
+
+=== checkgtk3
+
+This script allows the developer to quickly identify whether or not a
+given GTK3/GDK3/Pango/etc... C function is available within the SLgtk3
+module.
+
+ > checkgtk3 gtk_function_name [ gtk_function_name ...]
+
+=== slgtk3-demo.sl
+
+This script reside in the examples directory and allow the user to
+cycle through the various demos.
+All this examples are more or less direct translation from GTK3
+examples, via _c2slang.sh_ script.
+
+== Versioning
+
+SLgtk3 indicates version information in the variables :
+
+
+ _gtk3_module_version        An integer containing the value
+                            (10000*major_ver) + (100*minor_ver) + micro_ver
+
+ _gtk3_module_version_string        A string containing the value
+                                   major_ver.minor_ver.micro_ver
+
+The GTK3 version against one SLgtk3 is linked can be retrieve from
+thoses functions :
+
+ gtk_get_major_version, gtk_get_minor_version, gtk_get_micro_version
+
+The GTK3 version which was used at module compile time is held in the
+variable :
+
+ _gtk_version        An integer containing the value
+                     10000 * GTK_MAJOR_VERSION + 100 * GTK_MINOR_VERSION + GTK_MICRO_VERSION
+
+Similar variables are defined for Glib, GdkPixbuf and Pango :
+
+ _glib_version
+ _gdk_pixbuf_version
+ _pango_version

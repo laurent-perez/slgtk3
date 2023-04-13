@@ -1,0 +1,80 @@
+gmain.h
+# galloca.h
+# garray.h
+# gasyncqueue.h
+# gatomic.h
+# gbacktrace.h
+# gbase64.h
+# gbitlock.h
+gbookmarkfile.h
+# gbytes.h
+gcharset.h
+gchecksum.h
+gconvert.h
+# gdataset.h
+gdate.h
+gdatetime.h
+gdir.h
+genviron.h
+# gerror.h
+gfileutils.h
+ggettext.h
+# ghash.h
+ghmac.h
+# ghook.h
+ghostutils.h
+# gi18n.h
+# gi18n-lib.h
+giochannel.h
+gkeyfile.h
+# glib-autocleanups.h
+# glib-typeof.h
+# glist.h
+# gmacros.h
+gmain.h
+gmappedfile.h
+# gmarkup.h
+# gmem.h
+# gmessages.h
+# gnode.h
+# goption.h
+# gpattern.h
+gpoll.h
+gprimes.h
+# gprintf.h
+# gqsort.h
+gquark.h
+# gqueue.h
+grand.h
+# grcbox.h
+# grefcount.h
+# grefstring.h
+gregex.h
+# gscanner.h
+# gsequence.h
+# gshell.h
+# gslice.h
+# gslist.h
+# gspawn.h
+# gstdio.h
+gstrfuncs.h
+# gstringchunk.h
+# gstring.h
+# gstrvbuilder.h
+# gtestutils.h
+# gthread.h
+# gthreadpool.h
+gtimer.h
+gtimezone.h
+# gtrashstack.h
+# gtree.h
+# gtypes.h
+gunicode.h
+guri.h
+gutils.h
+guuid.h
+gvariant.h
+gvarianttype.h
+gversion.h
+# gversionmacros.h
+# gwin32.h

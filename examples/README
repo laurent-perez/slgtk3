@@ -1,0 +1,7 @@
+All examples in this directory were adapted from sample C code in
+gtk+-3.x.x/demos/gtk-demo
+Most of the work was done by the ../admin/c2slang.sh script from SLgtk
+by Mike Noble.
+You can run these demos by launching 'slgtk3-demo.sl' in this directory.
+Original demos from GTK3 distribution can be seen by running
+'gtk3-demo' program.

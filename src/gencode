@@ -1,0 +1,6 @@
+#!/bin/sh
+
+GTK_HDR_LIST="glib.lst gio.lst gobject.lst gdk.lst gdk-pixbuf.lst gtk.h unix-print.lst pango.lst"
+
+# slirp -otree -m gtk3 -noautotype -noincludes -noinit -rc ./slirprc-gtk3.sl `pkg-config --cflags-only-I gtk+-3.0` `./listhdrs $GTK_HDR_LIST`
+slirp -m gtk3 -noautotype -noincludes -noinit -rc ./slirprc-gtk3.sl `pkg-config --cflags-only-I gtk+-3.0` `./listhdrs $GTK_HDR_LIST`

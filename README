@@ -1,0 +1,36 @@
+This is a S-Lang [1] module for GTK3 [2]
+SLgtk3 is based on GTK2 bindings for S-Lang by Mike Noble [3].
+I'm very gratefull to him for helping me understand more S-Lang and
+SLIRP by reading his code.
+Large parts of the module are generated using SLIRP [4] and some
+functions are wrapped by hands.
+
+INSTALL
+Configuration, build and install steps are not automated  yet.
+You have to run '.gencode' to make SLIRP generate the glue code.
+Then launch the 'make' command to build the module (you may have to
+modify the makefile according to your system) or run 'meson setup
+builddir' and 'meson compile -C builddir' if you want to use the meson
+build system.
+You will have to manually copy the resulting 'gtk3-module.so' (or
+builddir 'gtk3-module.so') where other slang modules are installed
+(/usr/lib64/slang/v2/modules), and 'gtk3.sl' to local packages
+directory (/usr/share/slsh/local-packages).
+
+The 'slgtk3-demo.sl' script in examples directory try to mimic
+gtk3-demo from GTK3.
+
+DOC
+You should be able to use this module reading detailled GTK3
+documentation and s-lang scripts provided in examples directory.
+
+THANKS
+John Davis for writing S-Lang.
+Mike Noble for writing SLIRP
+The GTK team for writing GTK3.
+
+LINKS
+[1] http://www.jedsoft.org/slang
+[2] https://gtk.org
+[3] https://space.mit.edu/cxc/slgtk
+[4] https://space.mit.edu/cxc/slirp

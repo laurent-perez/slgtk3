@@ -1,0 +1,23 @@
+gbinding.h
+# gbindinggroup.h
+# gboxed.h
+# gclosure.h
+genums.h
+# glib-enumtypes.h
+# glib-types.h
+# gmarshal.h
+gobject.h
+# gobject-autocleanups.h
+# gobjectnotifyqueue.c
+gparam.h
+# gparamspecs.h
+gsignal.h
+# gsignalgroup.h
+# gsourceclosure.h
+gtype.h
+# gtypemodule.h
+# gtypeplugin.h
+# gvaluearray.h
+# gvaluecollector.h
+gvalue.h
+gvaluetypes.h
